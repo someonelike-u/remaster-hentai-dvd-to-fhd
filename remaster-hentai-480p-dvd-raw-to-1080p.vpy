@@ -4,20 +4,17 @@ from vsutil import depth, get_y
 from vsTAAmbk import TAAmbk
 import G41Fun as fun
 import havsfunc as haf
-import vardefunc as vdf
 
-__version__ = 0.13
+__version__ = 0.14
 
 core = vs.core
  
 
 """
-
 A template to remaster bad DVD encode RAW from 480p to 1080p, by using the waifu2x upscaler.
  
 Pros: Sharpen, no noise
 Cons: Details lost, weird lineart sometimes
-
 """
 
 
@@ -35,7 +32,7 @@ aa = TAAmbk(luma, aatype='Eedi3', nsize=4, nns=4, mytpe=1, down8=False, opencl=T
 
 sharp = core.warp.AWarpSharp2(aa, thresh=50, blur=3, type=0, depth=16) # Reduce large lineart
 sharp = core.asharp.ASharp(sharp, t=0.5, hqbf=True) # Normal sharp
-sharp = vdf.misc.merge_chroma(sharp, src16) # Merge sharp luma
+sharp = core.std.ShufflePlanes([sharp, src16], [0, 1, 2], vs.YUV) # Merge sharp luma
 sharp = fun.Hysteria(sharp, sstr=0.5) # Make lineart darker
 
 convert = core.fmtc.resample(clip=sharp, css='444')
