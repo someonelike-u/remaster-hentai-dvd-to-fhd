@@ -6,7 +6,7 @@ import G41Fun as fun
 import havsfunc as haf
 import vardefunc as vdf
 
-__version__ = 0.12
+__version__ = 0.13
 
 core = vs.core
  
