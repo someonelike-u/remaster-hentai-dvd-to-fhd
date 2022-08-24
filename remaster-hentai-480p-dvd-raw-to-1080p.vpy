@@ -1,9 +1,10 @@
 import vapoursynth as vs
 import kagefunc as kgf
-from vsutil import depth
+from vsutil import depth, get_y
 from vsTAAmbk import TAAmbk
 import G41Fun as fun
 import havsfunc as haf
+import vardefunc as vdf
 
 __version__ = 0.12
 
@@ -28,10 +29,13 @@ src16 = depth(src, 16)
 if src16.height != 480:
     src16 = src16.resize.Spline36(848, 480)
 
-aa = TAAmbk(src16, aatype='Eedi3', nsize=4, nns=4, mytpe=1, down8=False, opencl=True)
+luma = get_y(src16)
+
+aa = TAAmbk(luma, aatype='Eedi3', nsize=4, nns=4, mytpe=1, down8=False, opencl=True)
 
 sharp = core.warp.AWarpSharp2(aa, thresh=50, blur=3, type=0, depth=16) # Reduce large lineart
 sharp = core.asharp.ASharp(sharp, t=0.5, hqbf=True) # Normal sharp
+sharp = vdf.misc.merge_chroma(sharp, src16) # Merge sharpened luma
 sharp = fun.Hysteria(sharp, sstr=0.5) # Make lineart darker
 
 convert = core.fmtc.resample(clip=sharp, css='444')
