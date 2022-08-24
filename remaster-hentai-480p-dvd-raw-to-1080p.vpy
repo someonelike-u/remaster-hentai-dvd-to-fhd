@@ -5,7 +5,7 @@ from vsTAAmbk import TAAmbk
 import G41Fun as fun
 import havsfunc as haf
 
-__version__ = 0.11
+__version__ = 0.12
 
 core = vs.core
  
@@ -38,7 +38,7 @@ convert = core.fmtc.resample(clip=sharp, css='444')
 convert = core.fmtc.matrix(clip=convert, mat='709', col_fam=vs.RGB)
 convert = core.fmtc.bitdepth(clip=convert, bits=32)
 
-waifu = core.w2xc.Waifu2x(convert, noise=3).resize.Spline36(1920, 1080)
+waifu = core.w2xnvk.Waifu2x(convert, noise=3, model=2).resize.Spline36(1920, 1080)
 reconvert = core.fmtc.bitdepth(clip=waifu, bits=16)
 reconvert = core.fmtc.matrix (clip=reconvert, mat='709', col_fam=vs.YUV, bits=16)
 reconvert = core.fmtc.resample(clip=reconvert, css='420')
