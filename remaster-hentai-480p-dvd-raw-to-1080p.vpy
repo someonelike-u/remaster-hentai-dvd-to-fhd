@@ -35,7 +35,7 @@ aa = TAAmbk(luma, aatype='Eedi3', nsize=4, nns=4, mytpe=1, down8=False, opencl=T
 
 sharp = core.warp.AWarpSharp2(aa, thresh=50, blur=3, type=0, depth=16) # Reduce large lineart
 sharp = core.asharp.ASharp(sharp, t=0.5, hqbf=True) # Normal sharp
-sharp = vdf.misc.merge_chroma(sharp, src16) # Merge sharpened luma
+sharp = vdf.misc.merge_chroma(sharp, src16) # Merge sharp luma
 sharp = fun.Hysteria(sharp, sstr=0.5) # Make lineart darker
 
 convert = core.fmtc.resample(clip=sharp, css='444')
