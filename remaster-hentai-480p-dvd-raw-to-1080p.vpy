@@ -1,11 +1,10 @@
 import vapoursynth as vs
 import kagefunc as kgf
-from vsutil import depth, get_y
 from vsTAAmbk import TAAmbk
 import G41Fun as fun
 import havsfunc as haf
 
-__version__ = 0.14
+__version__ = 0.15
 
 core = vs.core
  
@@ -21,12 +20,12 @@ Cons: Details lost, weird lineart sometimes
 file = r'[hentai]video.mp4'
 #src = core.ffms2.Source(source=file)
 src = core.lsmas.LWLibavSource(source=file)
-src16 = depth(src, 16)
+src16 = core.fmtc.bitdepth(src, bits=16)
 
 if src16.height != 480:
     src16 = src16.resize.Spline36(848, 480)
 
-luma = get_y(src16)
+luma = core.std.ShufflePlanes(src16, 0, vs.GRAY)
 
 aa = TAAmbk(luma, aatype='Eedi3', nsize=4, nns=4, mytpe=1, down8=False, opencl=True)
 
@@ -48,6 +47,6 @@ resharp = haf.LSFmod(reconvert, strength=50, defaults='Slow') # Sharp again a li
 deband = core.f3kdb.Deband(resharp, y=48, cb=48, cr=48, grainy=48, grainc=48, output_depth=16)
 grain = kgf.adaptive_grain(deband)
 
-output = depth(grain, 10)
+output = core.fmtc.bitdepth(grain, bits=10)
 #src16.set_output(0)
 output.set_output()
